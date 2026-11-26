@@ -1,0 +1,109 @@
+name: Before3PM
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  knownRegions: [en, zh-Hans, zh-Hant]
+settings:
+  base:
+    APP_ID: com.hgsldswk.before3pm
+    APP_STORE_ID: "6838834280"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+targets:
+  Before3PM:
+    type: application
+    platform: iOS
+    sources: [Before3PM, Shared]
+    dependencies:
+      - target: Before3PMWidget
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID)
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: Before3PM AppStore
+    info:
+      path: Before3PM/Info.plist
+      properties:
+        CFBundleDisplayName: Before 3PM
+        CFBundleDevelopmentRegion: en
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+        NSSupportsLiveActivities: true
+        APP_STORE_ID: $(APP_STORE_ID)
+  Before3PMWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Before3PMWidget
+      - Shared/DepartureCountdown.swift
+      - Shared/L10n.swift
+      - Shared/Localizable.xcstrings
+      - Shared/ThemeColors.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID).widget
+        TARGETED_DEVICE_FAMILY: "1"
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: Before3PM Widget AppStore
+    info:
+      path: Before3PMWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Before 3PM
+        CFBundleDevelopmentRegion: en
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+  Before3PMTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Before3PMTests, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID).tests
+        GENERATE_INFOPLIST_FILE: YES
+  Before3PMUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Before3PMUITests]
+    dependencies:
+      - target: Before3PM
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID).uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Before3PM
+schemes:
+  Before3PM:
+    build:
+      targets:
+        Before3PM: all
+        Before3PMTests: [test]
+    test:
+      config: Debug
+      targets: [Before3PMTests]
+  Before3PMUI:
+    build:
+      targets:
+        Before3PM: all
+        Before3PMUITests: [test]
+    test:
+      config: Debug
+      targets: [Before3PMUITests]
